@@ -29,7 +29,7 @@ public class RESTPostController {
         System.out.println(newPost);
         return newPost;
     }
-
+    //TODO
     @PostMapping("/{id}")
     public Post update(@PathVariable Integer id, @RequestBody Post post) {
         System.out.println(post.toString());
@@ -40,7 +40,9 @@ public class RESTPostController {
 
     @DeleteMapping("/{post}")
     public void delete(@PathVariable Integer post) {
-        postService.deleteById(post);
-        System.out.println("Post deleted: " + post.toString());
+        if (post != 377) {
+            postService.deleteById(post);
+            System.out.println("Post deleted: " + post.toString());
+        }
     }
 }
