@@ -1,20 +1,28 @@
 package ru.volkovd.simpleapp.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.volkovd.simpleapp.models.Post;
+import ru.volkovd.simpleapp.models.User;
+import ru.volkovd.simpleapp.security.UserDetailsServiceImpl;
 import ru.volkovd.simpleapp.services.PostService;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
 @RequestMapping("/posts")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000/")
+@Slf4j
 public class RESTPostController {
 
     private final PostService postService;
+    private final UserDetailsServiceImpl userService;
 
-    public RESTPostController(PostService postService) {
+    public RESTPostController(PostService postService, UserDetailsServiceImpl userService) {
         this.postService = postService;
+        this.userService = userService;
     }
 
     @GetMapping
@@ -23,7 +31,14 @@ public class RESTPostController {
     }
 
     @PostMapping
-    public Post add(@RequestBody Post post) {
+    public Post add(@RequestBody Post post, HttpServletRequest request, HttpServletResponse response) {
+
+        String x = request.getUserPrincipal().getName();
+
+        User user = userService.getUserByUserName(x);
+
+        post.setAuthor(user);
+
         System.out.println(post.toString());
         Post newPost = postService.save(post);
         System.out.println(newPost);

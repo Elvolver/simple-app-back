@@ -2,10 +2,7 @@ package ru.volkovd.simpleapp.models;
 
 import ru.volkovd.simpleapp.DTO.PostDTO;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Post {
@@ -14,14 +11,27 @@ public class Post {
     private Integer id;
     private String title;
     private String description;
+    @ManyToOne
+    private User author;
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+
 
     public Post() {
     }
 
-    public Post(Integer id, String title, String description) {
+    public Post(Integer id, String title, String description, User author) {
         this.id = id;
         this.title = title;
         this.description = description;
+        this.author = author;
     }
 
     public Post(PostDTO post) {
