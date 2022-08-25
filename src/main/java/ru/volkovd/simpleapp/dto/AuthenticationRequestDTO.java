@@ -1,4 +1,4 @@
-package ru.volkovd.simpleapp.controllers;
+package ru.volkovd.simpleapp.dto;
 
 import lombok.Data;
 

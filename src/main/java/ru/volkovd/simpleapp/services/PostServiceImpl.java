@@ -1,7 +1,7 @@
 package ru.volkovd.simpleapp.services;
 
 import org.springframework.stereotype.Service;
-import ru.volkovd.simpleapp.DTO.PostDTO;
+import ru.volkovd.simpleapp.dto.PostDTO;
 import ru.volkovd.simpleapp.models.Post;
 import ru.volkovd.simpleapp.repository.PostRepository;
 
@@ -34,7 +34,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deleteById(Integer post) {
-        postRepository.deleteById(post);
+    public void delete(Post post) {
+        postRepository.delete(post);
     }
 }

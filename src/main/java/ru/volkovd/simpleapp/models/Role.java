@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 public enum Role {
     USER(Set.of(Permission.DEVELOPERS_READ)),
-    ADMIN(Set.of(Permission.DEVELOPERS_READ, ru.volkovd.simpleapp.models.Permission.DEVELOPERS_WRITE));
+    ADMIN(Set.of(Permission.DEVELOPERS_READ, Permission.DEVELOPERS_WRITE));
 
     private final Set<Permission> permissions;
 

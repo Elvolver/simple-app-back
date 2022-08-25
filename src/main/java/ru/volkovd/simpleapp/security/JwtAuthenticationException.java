@@ -6,7 +6,7 @@ import org.springframework.security.core.AuthenticationException;
 
 @Getter
 public class JwtAuthenticationException extends AuthenticationException {
-    private HttpStatus httpStatus;
+    private final HttpStatus httpStatus;
 
     public JwtAuthenticationException(String msg, Throwable cause, HttpStatus httpStatus) {
         super(msg, cause);
