@@ -2,7 +2,7 @@ package ru.volkovd.simpleapp.services;
 
 import org.springframework.stereotype.Service;
 import ru.volkovd.simpleapp.dto.RegistrationRequestDTO;
-import ru.volkovd.simpleapp.dto.UserDTO;
+import ru.volkovd.simpleapp.dto.UserResponse;
 import ru.volkovd.simpleapp.models.User;
 import ru.volkovd.simpleapp.repository.UserRepository;
 
@@ -28,12 +28,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public UserResponse getAll(int pageNo, int pageSize, String sortBy, String sortDir, User user) {
+        return null;
     }
 
     @Override
     public void delete(User user) {
         userRepository.delete(user);
+    }
+
+    @Override
+    public User getUser(Long id) {
+        return userRepository.getById(id);
     }
 }

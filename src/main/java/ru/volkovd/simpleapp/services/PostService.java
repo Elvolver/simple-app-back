@@ -1,13 +1,15 @@
 package ru.volkovd.simpleapp.services;
 
-import ru.volkovd.simpleapp.dto.PostDTO;
+import ru.volkovd.simpleapp.dto.PostResponse;
+import ru.volkovd.simpleapp.dto.PostResponseDTO;
 import ru.volkovd.simpleapp.models.Post;
-import java.util.List;
 
 public interface PostService {
-    Post save(PostDTO post);
+    Post save(PostResponseDTO post);
+
     Post save(Post post);
 
-    List<Post> getAll();
+    PostResponse getAll(int pageNo, int pageSize, String sortBy, String sortDir);
+
     void delete(Post post);
 }

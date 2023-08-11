@@ -1,46 +1,75 @@
 package ru.volkovd.simpleapp.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import org.hibernate.Hibernate;
+import org.springframework.context.annotation.Profile;
 import ru.volkovd.simpleapp.dto.RegistrationRequestDTO;
-import ru.volkovd.simpleapp.dto.UserDTO;
 
 import javax.persistence.*;
-import java.util.Objects;
-
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(name = "users")
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "email", nullable = false)
     @JsonIgnore
-    @Column(name = "email")
     private String email;
+
+    @Column(name = "password", nullable = false)
     @JsonIgnore
-    @Column(name = "password")
     private String password;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
-    private UserProfile userProfile;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id", referencedColumnName = "id")
-    private Avatar avatar;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private UserProfile profile;
 
+    //    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
+//    @PrimaryKeyJoinColumn
+//    private Avatar avatar;
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = {@JoinColumn(name = "channel_id")},
+            inverseJoinColumns = {@JoinColumn(name = "subscriber_id")}
+    )
+    private Set<User> subscribers = new HashSet<>();
+
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "user_subscriptions",
+            joinColumns = {@JoinColumn(name = "subscriber_id")},
+            inverseJoinColumns = {@JoinColumn(name = "channel_id")}
+    )
+    private Set<User> subscriptions = new HashSet<>();
+
+    @Column(name = "role", nullable = false)
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "role")
+    @JsonIgnore
     private ru.volkovd.simpleapp.models.Role role;
-    @JsonIgnore
+
+    @Column(name = "status", nullable = false)
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "status")
+    @JsonIgnore
     private ru.volkovd.simpleapp.models.Status status;
 
     public User(RegistrationRequestDTO registrationRequestDTO) {
@@ -49,23 +78,4 @@ public class User {
         this.role = Role.USER;
         this.status = Status.ACTIVE;
     }
-
-    public void addUserProfile(RegistrationRequestDTO request) {
-        this.userProfile = new UserProfile(this.id, request.getFirstname(), request.getLastname());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
-
-
 }

@@ -48,7 +48,7 @@ public class AuthenticationRestControllerV1 {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public void authenticate(HttpServletRequest request, HttpServletResponse response) {
         String x = request.getUserPrincipal().getName();
         User user = userService.getUserByUserName(x);
@@ -62,8 +62,6 @@ public class AuthenticationRestControllerV1 {
     @PostMapping("/registration")
     public ResponseEntity<?> registration(@RequestBody RegistrationRequestDTO request) {
         User user = userService.save(request);
-        user.addUserProfile(request);
-        user = userService.save(user);
         Map<Object, Object> response = authenticationService.createAuthenticationResponse(user);
         return ResponseEntity.ok(response);
     }
@@ -71,12 +69,20 @@ public class AuthenticationRestControllerV1 {
     @PostMapping("/checkLogin")
     public ResponseEntity<?> checkLogin(@RequestBody AuthenticationRequestDTO request) {
         User user = userRepository.findByEmail(request.getEmail()).orElse(null);
-        Map<Object, Object> response  = new HashMap<>();;
+        Map<Object, Object> response  = new HashMap<>();
         if (user == null) {
             response.put("result", false);
         } else {
             response.put("result", true);
         }
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<?> check(HttpServletRequest request) {
+        String x = request.getUserPrincipal().getName();
+        User user = userService.getUserByUserName(x);
+        Map<Object, Object> response = authenticationService.createAuthenticationResponse(user);
         return ResponseEntity.ok(response);
     }
 }

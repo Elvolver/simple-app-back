@@ -1,13 +1,17 @@
 package ru.volkovd.simpleapp.models;
 
-import org.hibernate.annotations.GenericGenerator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
 import java.io.IOException;
 
 @Entity
 @Table(name = "avatars")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Avatar {
     @Id
     private Long id;
@@ -17,7 +21,8 @@ public class Avatar {
     @Lob
     private byte[] data;
 
-    public Avatar() {}
+    public Avatar() {
+    }
 
     public Avatar(String fileName, String fileType, byte[] data) {
         this.fileName = fileName;
@@ -28,9 +33,11 @@ public class Avatar {
     public void setId(Long id) {
         this.id = id;
     }
+
     public byte[] getData() {
         return this.data;
     }
+
     public void setData(MultipartFile file) throws IOException {
         this.fileName = file.getOriginalFilename();
         this.fileType = file.getContentType();
@@ -39,5 +46,10 @@ public class Avatar {
 
     public Avatar(MultipartFile file) throws IOException {
         setData(file);
+    }
+
+    @Override
+    public String toString() {
+        return this.fileName;
     }
 }
